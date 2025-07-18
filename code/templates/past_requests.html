@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Past Requests</title>
+    <style>
+
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3f7;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .dashboard {
+            display: block;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; /* fixed width */
+            height: 100vh; /* full screen height */
+            overflow-y: auto; /* Optional: scroll sidebar if content is tall */
+            z-index: 1000;
+        }
+        
+        .profile {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .profile-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin-bottom: 10px;
+            margin-left: 70px;
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+        
+        .profile-name {
+            font-size: 1.3rem;
+            margin: 5px 0;
+        }
+        
+        .profile-role {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .nav-menu {
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255,255,255,0.2);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+
+       /* Main Content Styles */
+            /* Main Content Styles */
+    .main-content {
+        padding: 30px;
+        padding-left: 280px;
+        background-color: #f8fafc;
+    }
+
+    .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+    
+    .date-time {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+}
+
+   .info-card {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    max-width: 900px;
+    margin: 30px ;
+    border-left: 5px solid var(--secondary);
+    animation: fadeIn 0.7s ease;
+}
+
+.info-card h2 {
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.team-name {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.project-section i{
+    margin-right: 10px;
+}
+
+.section-title {
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    color: var(--secondary);
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 6px;
+}
+
+.project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.project-item {
+    padding: 12px 18px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    background-color: #f8f9fc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.project-item:hover {
+    transform: scale(1.02);
+    background-color: #e9f3fc;
+}
+
+.project-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.project-deadline {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.no-projects {
+    font-style: italic;
+    color: #999;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.request-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.request-table th, .request-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.request-table th {
+  background-color: var(--light);
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.request-table tr:hover {
+  background-color: #f1f7ff;
+}
+
+.request-table td {
+  color: #444;
+}
+      
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-img" onclick="location.href='/account'">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="profile-name">{{ employee_name }}</h3>
+                <p class="profile-role">{{ employee_role }}</p>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item" onclick="location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item "  onclick="location.href='/work_info'">
+                    <i class="fas fa-briefcase"></i>
+                    <span> Work Info</span>
+                </div>
+                <div class="nav-item" onclick="location.href='/request'">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>Request Leave</span>
+                </div>
+                <div class="nav-item active">
+                    <i class="fas fa-history"></i>
+                    <span>Past Leave Requests</span>
+                </div>
+                <div class="nav-item" onclick="location.href='/logout'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title"></h1>
+                <div class="date-time">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+
+                 <div class="info-card">
+  <h3 class="section-title"><i class="fas fa-clock"></i> Leave Request Summary</h3>
+  <p><strong>Total Requests:</strong> {{ total_requests }}</p>
+  <p><strong>Total Accepted Leave Days (in {{ current_year }}):</strong> {{ total_leave_days }}</p>
+
+  {% if past_requests %}
+    <div class="table-wrapper">
+      <table class="request-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Request Date</th>
+            <th>Leave Days</th>
+            <th>Rule Decision</th>
+            <th>Rule Reason</th>
+            <th>ML Decision</th>
+            <th>ML Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in past_requests %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ req.request_date }}</td>
+              <td>{{ req.leave_days }}</td>
+              <td>{{ req.rule_decision }}</td>
+              <td>{{ req.rule_reason }}</td>
+              <td>{{ req.ml_decision }}</td>
+              <td>{{ req.ml_reason }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="no-projects">No past leave requests.</p>
+  {% endif %}
+</div>
+
+
+
+           
+        </div>
+    
+    <script>
+        // Display current date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html>
+

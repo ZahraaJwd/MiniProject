@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Request Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --success-color: #4cc9f0;
+            --warning-color: #f8961e;
+            --danger-color: #f94144;
+            --light-bg: #f8f9fa;
+            --dark-text: #2b2d42;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+        }
+        
+        .result-card {
+            max-width: 650px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background: white;
+            border: none;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .header-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .decision-badge {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .approved {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .rejected {
+            background-color: rgba(249, 65, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .pending {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .detail-card {
+            border-left: 4px solid var(--primary-color);
+            border-radius: 5px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            background: var(--light-bg);
+        }
+        
+        .result-section {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(248, 249, 250, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4cc9f0, #4361ee);
+        }
+        
+        @media (max-width: 576px) {
+            .result-card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .header-icon {
+                font-size: 2rem;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="result-card animate__animated animate__fadeInUp">
+            <div class="text-center">
+                <div class="header-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h2 class="mb-3">Leave Request Result</h2>
+                <div class="decision-badge {{ rule.decision|lower }}">
+                    {{ rule.decision }}
+                </div>
+            </div>
+            
+            <div class="detail-card mt-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-user me-2"></i>Employee:</strong> {{ employee_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-id-badge me-2"></i>Employee ID:</strong> {{ employee_id }}</p>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-calendar-day me-2"></i>Start Date:</strong> {{ start_date }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-calendar-day me-2"></i>End Date:</strong> {{ end_date }}</p>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <p><strong><i class="fas fa-clock me-2"></i>Total Days:</strong> {{ requested_days }} day(s)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h4 class="mb-3"><i class="fas fa-robot text-primary me-2"></i>Rule-Based Evaluation</h4>
+                <p><strong>Decision:</strong> {{ rule.decision }}</p>
+                <p class="mt-2"><strong>Reason:</strong> {{ rule.reason }}</p>
+                
+                {% if rule.notes %}
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>{{ rule.notes }}
+                </div>
+                {% endif %}
+            </div>
+            
+            
+            <div class="result-section">
+                <h4 class="mb-3"><i class="fas fa-brain me-2" style="color: rgb(248, 44, 221); "></i>AI Prediction</h4>
+                <p><strong>Decision:</strong> {{ ml.decision }}</span></p>
+                <p><strong>Analysis:</strong> {{ ml.explanation }}</p>
+
+
+                {% if rule.notes %}
+                
+                {% endif %}
+
+                
+            </div>
+           
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                <a href="/request" class="btn btn-primary px-4">
+                    <i class="fas fa-plus-circle me-2"></i>New Request
+                </a>
+                <a href="/dashboard" class="btn btn-outline-secondary px-4">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Request Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .result-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container bg-light">
+        <h2 class="text-center">Leave Request Result</h2>
+        <hr>
+
+        <p><strong>Dear</strong> {{ employee_name }}</p>
+        <p><strong>Leave Start Date:</strong> {{ start_date }}</p>
+        <p><strong>Leave End Date:</strong> {{ end_date }}</p>
+
+        <h4 class="mt-4 text-primary">Rule-Based Engine Result:</h4>
+        <p><strong>Decision:</strong> {{ rule.decision }}</p>
+        <p><strong>Reason:</strong> {{ rule.reason }}</p>
+
+        {# Optional: Uncomment when ML result is passed in #}
+        {# 
+        <h4 class="mt-4 text-success">🤖 ML-Based Engine Result:</h4>
+        <p><strong>Decision:</strong> {{ ml.decision }}</p>
+        <p><strong>Reason:</strong> {{ ml.reason }}</p>
+        <p><strong>Confidence:</strong> {{ ml.confidence }}%</p>
+        #}
+
+        <div class="text-center mt-4">
+            <a href="/request" class="btn btn-primary">Submit Another Request</a>
+        </div>
+    </div>
+</body>
+</html>

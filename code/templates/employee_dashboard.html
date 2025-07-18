@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <style>
+
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3f7;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .dashboard {
+            display: block;
+        }
+        
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; /* fixed width */
+            height: 100vh; /* full screen height */
+            overflow-y: auto; /* Optional: scroll sidebar if content is tall */
+            z-index: 1000;
+        }
+        
+        .profile {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .profile-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin-bottom: 10px;
+            margin-left: 70px;
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+        
+        .profile-name {
+            font-size: 1.3rem;
+            margin: 5px 0;
+        }
+        
+        .profile-role {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .nav-menu {
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255,255,255,0.2);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            padding: 30px;
+            padding-left: 280px;
+            background-color: #f8fafc;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .card-desc {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .date-time {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px; 
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile">
+                <div class="profile-img" onclick="location.href='/account'">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="profile-name">{{ employee_name }}</h3>
+                <p class="profile-role">{{ employee_role }}</p>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <!--
+                <div class="nav-item" onclick="location.href='account.html'">
+                    <i class="fas fa-user-circle"></i>
+                    <span>My Account</span>
+                </div>
+                -->
+                <div class="nav-item" onclick="location.href='/work_info'">
+                    <i class="fas fa-briefcase"></i>
+                    <span>   Work Info</span>
+                </div>
+                <div class="nav-item" onclick="location.href='/request'">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>Request Leave</span>
+                </div>
+                <div class="nav-item" onclick="location.href='/past-requests'">
+                    <i class="fas fa-history"></i>
+                    <span>Past Leave Requests</span>
+                </div>
+                <div class="nav-item" onclick="location.href='/logout'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title"></h1>
+                <div class="date-time">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+            
+            <div class="card-container">
+                <!-- My Account Card -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="card-title">Work Info</h3>
+                    <p class="card-desc">View work information, contact details, and employment information.</p>
+                    <button class="btn btn-primary"  onclick="location.href='/work_info'">View Details</button>
+                </div>
+                
+                <!-- Request Leave Card -->
+                <div class="card" >
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <h3 class="card-title">Request Leave</h3>
+                    <p class="card-desc">Submit a new leave request for vacation, sick days, or personal time off.</p>
+                    <button class="btn btn-primary" onclick="location.href='/request'">Request Now</button>
+                </div>
+                
+                <!-- Past Requests Card -->
+                <div class="card" >
+                    <div class="card-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="card-title">Past Requests</h3>
+                    <p class="card-desc">View the history of your previous leave requests and their approval status.</p>
+                    <button class="btn btn-primary" onclick="location.href='/past-requests'">View History</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Display current date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html>

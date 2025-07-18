@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leave Request</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/request.css" />
+</head>
+<body>
+  <div class="container">
+
+    <h2>Submit Leave Request</h2>
+    <form method="POST" action="/submit-request" onsubmit="submitAnimation(this)">
+      <label for="start">Start Date</label>
+      <input type="date" id="start" name="start_date" required min="{{ today }}">
+
+      <label for="end">End Date</label>
+      <input type="date" id="end" name="end_date" required min="{{ today }}"/>
+
+      <label for="type">Leave Type</label>
+      <select id="type" name="leave_type" required>
+        <option value="" disabled selected>Select Type</option>
+        <option value="Sick Leave">Sick Leave</option>
+        <option value="Vacation">Vacation</option>
+        <option value="Emergency">Emergency</option>
+        <option value="Other">Other</option>
+      </select>
+
+<!--
+      <label for="reason">Reason</label>
+      <textarea id="reason" name="reason" rows="4" placeholder="Explain your reason..."></textarea>-->
+      <!--<textarea id="reason" name="reason" rows="4" placeholder="Explain your reason..." required></textarea>-->
+
+      <button type="submit" id="submitBtn">Submit Request</button>
+      <!--<a href="#" onclick="clearForm(); return false;" style="margin-left: 15px; color: #007bff; text-decoration: underline;">
+          Clear Form
+      </a>-->
+    </form>
+  </div>
+
+  <script>
+    // Submit Animation
+    function submitAnimation(form) {
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = "Submitting";
+      btn.classList.add('loading');
+    }
+  </script>
+
+  <script>
+  const startInput = document.getElementById('start');
+  const endInput = document.getElementById('end');
+
+  // Set min start date to today (fallback for HTML support)
+  const today = new Date().toISOString().split('T')[0];
+  startInput.min = today;
+
+  // Ensure end date is always >= start date
+  startInput.addEventListener('change', () => {
+    endInput.value = ''; // Clear old value if any
+    endInput.min = startInput.value;
+  });
+</script>
+
+<script>
+  function clearForm() {
+    const form = document.querySelector('form');
+    form.reset();
+
+    // Optional: Reset min on end date to today's value
+    const start = document.getElementById('start');
+    const end = document.getElementById('end');
+    end.min = start.min;
+  }
+</script>
+
+
+</body>
+</html>
+
